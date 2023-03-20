@@ -16,3 +16,20 @@ La organización de este repositorio se organiza en varias ramas las cuales se e
     - [**``practica-14.1``**](https://github.com/ssjosea/2-ASIR/tree/2%C2%BA-Trimestre/practica-14.1), [**``practica-14.2``**](https://github.com/ssjosea/2-ASIR/tree/2%C2%BA-Trimestre/practica-14.2) y [**``practica-14.4``**](https://github.com/ssjosea/2-ASIR/tree/2%C2%BA-Trimestre/practica-14.4).
     - [**``practica-15``**](https://github.com/ssjosea/2-ASIR/tree/2%C2%BA-Trimestre/practica-15).
     - [**``Web en Jekyll (ssjosea.github.io)``**](https://github.com/ssjosea/2-ASIR/tree/2%C2%BA-Trimestre/ssjosea.github.io) y [**``Web en Mkdocks``**](https://github.com/ssjosea/2-ASIR/tree/2%C2%BA-Trimestre/pr-3-mkdocs.github.io).
+
+# Descarga el repositorio
+
+Puedes descargar este repositorio con el siguiente comando:
+
+```git
+git clone https://github.com/ssjosea/2-ASIR.git
+```
+
+# Donde encontrarme
+
+- **Github**: [**`ssjosea`**](https://github.com/ssjosea)
+
+- **Linkedin**: [**``José Antonio Estrella Tijeras``**](https://www.linkedin.com/in/jos%C3%A9-antonio-estrella-tijeras-8163b325b/)
+
+- **Twitter**: [**`joseassj_`**](https://twitter.com/joseassj_)
+
