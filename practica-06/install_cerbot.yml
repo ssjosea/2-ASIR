@@ -1,0 +1,50 @@
+---
+- name: Playbook para instalar Cerbot
+  hosts: all
+  become: yes
+
+  vars_files:
+  - vars.yml
+
+  tasks:
+
+    - name: Habilitar AllowOverride
+      blockinfile:
+        path: /etc/apache2/sites-available/000-default.conf
+        block: |
+          <Directory "/var/www/html/">
+                  AllowOverride ALL
+          </Directory>
+
+    - name: Reinicio del servidor Apache
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
+
+    - name: Instalar snap
+      snap:
+        name: snapd
+        state: present
+
+    - name: Desinstalar certbot
+      snap:
+        name: certbot
+        state: absent
+
+    - name: Instalar cerbot
+      snap:
+        name: certbot
+        classic: true
+    
+    - name: Creamos un usuario para cerbot --------
+      ansible.builtin.file:
+        src: /snap/bin/certbot
+        dest: /usr/bin/certbot
+        owner: www-data
+        group: www-data
+        state: link
+
+    - name: Obtener certificado
+      shell: certbot --apache -d {{ DOMINIO_CERBOT }} -m {{ EMAIL }} --agree-tos --no-eff-email
+
+    # ansible-playbook -i inventario main.yml -e "cerbot=true"

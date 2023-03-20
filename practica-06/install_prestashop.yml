@@ -1,0 +1,141 @@
+---
+- name: Playbook para automatizar la instalacion de PrestaShop
+  hosts: aws
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Crear directorio en /tmp 
+      file: 
+        path: /tmp/psinfo
+        state: directory
+
+    - name: Clonar repositorio con la pila LAMP
+      git:
+        repo: "https://github.com/PrestaShop/php-ps-info.git"
+        dest: /tmp/psinfo/
+        clone: yes
+        update: yes
+    
+    - name: Movemos los recursos del repositorio al directorio /html
+      copy:
+        remote_src: yes
+        src: /tmp/psinfo/
+        dest: /var/www/html/phpinfo
+
+    - name: Cambios archivos de conf de PrestaShop
+      replace:
+        path: /etc/php/8.1/apache2/php.ini
+        regexp: ;max_input_vars = 1000
+        replace: max_input_vars = 5000
+      
+    - name: Cambios en archivos de conf de PrestaShop 
+      command: sed -i "s/memory_limit = 128M/memory_limit = 256M/" /etc/php/8.1/apache2/php.ini
+      
+    - name: Cambios en archivos de conf de PrestaShop 
+      command: sed -i "s/post_max_size = 8M/post_max_size = 128M/" /etc/php/8.1/apache2/php.ini
+      
+    - name: Cambios en archivos de conf de PrestaShop 
+      command: sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 128M/" /etc/php/8.1/apache2/php.ini
+
+    - name: Instalar extensiones de PHP
+      apt: 
+        name: 
+          - php-bcmath 
+          - php-imagick
+          - php-intl 
+          - php-memcached
+        state: present
+    
+    - name: Habilitar modulo de Apache -> headers
+      apache2_module:
+        state: present
+        name: headers
+    
+    - name: Reiniciar Apache
+      service:
+        name: apache2
+        state: restarted
+    
+    - name: Instalar módulo PyMySQL
+      pip:
+        name: pymysql
+        state: present
+
+    - name: Creamos base de datos en MySQL 
+      mysql_db:
+        name: "{{ PS_DB_NAME }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Creamos usuario para la base de datos en MySQL 
+      mysql_user:
+        name: "{{ PS_DB_USER }}"
+        password: "{{ PS_DB_PASSWORD }}"
+        priv: "{{ PS_DB_NAME }}.*:ALL"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Crear directorio de instalacion de PrestaShop 
+      file: 
+        path: /tmp/prestashop
+        state: directory
+
+    - name: Instalacion de PrestaShop
+      get_url:
+        url: https://github.com/PrestaShop/PrestaShop/releases/download/8.0.0/prestashop_8.0.0.zip
+        dest: /tmp/prestashop
+
+    - name: Descargar unzip
+      apt:
+        name: unzip
+        state: present
+    
+    - name: Descomprimir prestashop_8.0.0.zip 
+      unarchive:
+        src: /tmp/prestashop/prestashop_8.0.0.zip
+        dest: /tmp/prestashop
+        remote_src: yes
+
+    - name: Descomprimir prestashop.zip 
+      unarchive:
+        src: /tmp/prestashop/prestashop.zip
+        dest: /var/www/html/
+        remote_src: yes
+      
+    - name: Borrar archivos residuales de la instalacion de PrestaShop
+      file:
+        path: /tmp/prestashop*
+        state: absent
+      
+    - name: Cambiar propietario del directorio prestashop
+      file:
+        path: /var/www/html/
+        state: directory
+        owner: www-data
+        group: www-data
+        recurse: yes
+      
+    - name: Reiniciar Apache
+      service:
+        name: apache2
+        state: restarted
+    
+    - name: Variables de PHP en index_cli.php
+      ansible.builtin.shell: 
+              php index_cli.php --db_server={{ PS_DB_SERVER }} --db_user={{ PS_DB_USER }} --db_name={{ PS_DB_NAME }} --db_password={{ PS_DB_PASSWORD }} --language={{ LANGUAGE }} --name={{ PS_NAME }} --country={{ PS_COUNTRY }} --firstname={{ PS_FIRSTNAME }} --lastname={{ PS_LASTNAME }} --password={{ PS_PASSWORD }} --email={{ PS_EMAIL }} --domain={{ DOMAIN }} --ssl={{ SSL }}
+      args:
+        chdir: "/var/www/html/install"
+  
+    #- name: Borrar carpeta de instalacion
+    #  file:
+     #   path: /var/www/html/prestashop/install
+      #  state: absent
+    
+    - name: Cambio los archivos para acceder al index.php
+      replace:
+        path: /etc/apache2/mods-enabled/dir.conf
+        regexp: "DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm"
+        replace: "DirectoryIndex index.php index.cgi index.pl index.html index.xhtml index.htm"

@@ -1,0 +1,6 @@
+---
+- import_playbook: install_basic.yml
+- import_playbook: install_lamp.yml
+- import_playbook: install_tools.yml
+- import_playbook: install_prestashop.yml
+- import_playbook: install_cerbot.yml

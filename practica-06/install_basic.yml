@@ -1,0 +1,33 @@
+---
+- name: Playbook para instalar aplicaciones basicas para el servidor
+  hosts: aws
+  become: yes
+
+  tasks:
+    - name: Actualizar los paquetes
+      apt:
+        update_cache: yes
+
+    - name: Instalar servidor web Apache
+      apt: 
+        name: apache2
+        state: present
+      
+    - name: Instalar MySQL
+      apt: 
+        name: mysql-server
+        state: present
+    
+    - name: Instalar PHP y sus librerias
+      apt: 
+        name: 
+          - php 
+          - php-mysql
+          - libapache2-mod-php
+          - python3-pip
+        state: present
+
+    - name: Reiniciar Apache
+      service:
+        name: apache2
+        state: restarted

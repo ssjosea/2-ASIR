@@ -1,0 +1,73 @@
+---
+- name: Playbook para instalar configurar PHPMyAdmin y Adminer
+  hosts: aws
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Variables
+      debconf:
+        name: 'phpmyadmin'
+        question: 'phpmyadmin/reconfigure-webserver'
+        value: 'apache2'
+        vtype: 'multiselect'
+    
+    - name: Variables
+      debconf:
+        name: 'phpmyadmin'
+        question: 'phpmyadmin/dbconfiguring-install'
+        value: 'true'
+        vtype: 'boolean'
+    
+    - name: Variables
+      debconf:
+        name: 'phpmyadmin'
+        question: 'phpmyadmin/mysql/app-pass'
+        value: '{{ PHPMYADMIN_ADD_PASSWORD }}'
+        vtype: 'password'
+    
+    - name: Variables
+      debconf:
+        name: 'phpmyadmin'
+        question: 'phpmyadmin/app-password-confirm'
+        value: 'password'
+        vtype: '{{ PHPMYADMIN_ADD_PASSWORD }}'
+
+    - name: Instalamos librerias de PHPmyAdmin 
+      apt: 
+        name: 
+          - phpmyadmin  
+          - php-mbstring
+          - php-zip 
+          - php-gd
+          - php-json
+          - php-curl
+          - python3-pip
+
+    - name: Instalar módulo PyMySQL
+      pip:
+        name: pymysql
+        state: present
+
+    - name: PyMySQL
+      apt:
+        name: python3-mysqldb
+        state: present
+
+    - name: Crear directorio de instalacion de adminer
+      file: 
+        path: /var/www/html/adminer
+        state: directory
+
+    - name: Instalacion de adminer
+      get_url:
+        url: https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-mysql.php
+        dest: /var/www/html/adminer
+    
+    - name: Renombramos el archivo
+      copy:
+        remote_src: yes
+        src: /var/www/html/adminer/adminer-4.8.1-mysql.php
+        dest: /var/www/html/adminer/index.php

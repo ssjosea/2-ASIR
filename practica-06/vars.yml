@@ -1,0 +1,22 @@
+PS_DB_NAME: prestashop_db
+PS_DB_USER: prestashop_user
+PS_DB_PASSWORD: prestashop_pass
+
+DOMAIN: joseassj.ddns.net
+PS_NAME: Tienda
+PS_COUNTRY: es
+PS_FIRSTNAME: Jose 
+PS_LASTNAME: Estrella
+PS_PASSWORD: joseassj 
+PS_EMAIL: jesttij092@g.educaand.es
+PS_DB_SERVER: 127.0.0.1
+SSL: 1
+LANGUAGE: es
+
+
+DOMINIO_CERBOT: joseassj.ddns.net
+EMAIL: jose@demo.es
+
+PHPMYADMIN_ADD_PASSWORD: password
+STATS_USER: usuario
+STATS_PASSWORD: usuario

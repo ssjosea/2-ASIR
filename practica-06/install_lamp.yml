@@ -1,0 +1,40 @@
+---
+- name: Playbook para instalar la pila LAMP
+  hosts: aws
+  become: yes
+
+  tasks:    
+    - name: Crear directorio en /tmp 
+      file: 
+        path: /tmp/github
+        state: directory
+
+    - name: Clonar repositorio con la pila LAMP
+      git:
+        repo: 'https://github.com/josejuansanchez/iaw-practica-lamp.git'
+        dest: /tmp/github/
+        clone: yes
+        update: yes
+    
+    - name: Importar base de datos
+      shell: mysql -u root -c < /tmp/github/db/database.sql
+
+    
+    - name: Movemos los recursos del repositorio al directorio /html
+      copy:
+        remote_src: yes
+        src: /tmp/github/src/
+        dest: /var/www/html/lamp
+    
+    - name: Cambiar permisos del directorio (chown)
+      file:
+          path: /var/www/html/lamp
+          state: directory
+          owner: www-data
+          group: www-data
+          recurse: yes
+    
+    - name: Borrar index
+      file:
+        path: /var/www/html/index.html
+        state: absent
