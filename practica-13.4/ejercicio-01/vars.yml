@@ -1,0 +1,14 @@
+# Variables generales
+ec2_image: ami-06878d265978313ca
+ec2_instance_type: t2.medium
+ec2_key_name: vockey
+
+# Frontend
+ec2_security_group_frontend: frontend_sg 
+ec2_security_group_description_frontend: Grupo de seguridad de la instancia Frontend
+ec2_instance_name_frontend: ec2_frontend
+
+# Backend
+ec2_security_group_backend: backend_sg 
+ec2_security_group_description_backend: Grupo de seguridad de la instancia Backend
+ec2_instance_name_backend: ec2_backend

@@ -1,0 +1,169 @@
+---
+- name: Playbook para crear una infraestructura basada en NFS Server con grupos de seguridad en Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:  
+    - name:
+      include_vars: 
+        vars.yml
+    
+    # Grupo de seguridad -> Frontend
+    - name: Crear grupo de seguridad -> Frontend
+      ec2_group:
+        name: '{{ ec2_security_group_frontend }}'
+        description: '{{ ec2_security_group_description_frontend }}'
+        rules: 
+          - proto: tcp # Protocolo
+            from_port: 80 # Puerto de entrada -> HTTP
+            to_port: 80 # Puerto de salida -> HTTP
+            cidr_ip: 0.0.0.0/0 # Acepta conexion desde cualquier IP
+
+          - proto: tcp
+            from_port: 22 # Puerto de entrada -> SSH
+            to_port: 22 # Puerto de salida -> SSH
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 443 # Puerto de entrada -> HTTPS
+            to_port: 443 # Puerto de salida -> HTTPS
+            cidr_ip: 0.0.0.0/0
+
+    # Grupo de seguridad -> Backend
+    - name: Crear grupo de seguridad -> Backend
+      ec2_group:
+        name: '{{ ec2_security_group_backend}}'
+        description: '{{ ec2_security_group_description_backend }}'
+        rules: 
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 3306 # Puerto de entrada -> MySQL
+            to_port: 3306 # Puerto de salida -> MySQL
+            cidr_ip: 0.0.0.0/0
+    
+    # Grupo de seguridad -> NFS Server
+    - name: Crear grupo de seguridad -> NFS
+      ec2_group:
+        name: '{{ ec2_security_group_nfs }}'
+        description: '{{ ec2_security_group_description_nfs }}'
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 2049 # Puerto de entrada -> NFS
+            to_port: 2049 # Puerto de salida -> NFS
+            cidr_ip: 0.0.0.0/0
+
+    # Grupo de seguridad -> Balanceador de carga
+    - name: Crear grupo de seguridad -> Balanceador de carga
+      ec2_group:
+        name: '{{ ec2_security_group_balancer }}'
+        description: '{{ ec2_security_group_description_balancer }}'
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+            
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+    
+    # ------------------------------------------------------------------------------
+
+    # Instancia -> Frontend-01
+    - name: Crear instancia -> Frontend-01
+      ec2_instance:
+        name: '{{ ec2_instance_name_frontend_01 }}'
+        key_name: '{{ ec2_key_name }}' # Clave privada de seguridad -> Vockey
+        security_group: '{{ ec2_security_group_frontend }}'
+        instance_type: '{{ ec2_instance_type }}' # Caractetisticas de la instancia
+        image_id: '{{ ec2_image }}' # AMI de la instancia
+        state: running
+        
+     # Instancia -> Frontend-02
+    - name: Crear instancia -> Frontend-02
+      ec2_instance:
+        name: '{{ ec2_instance_name_frontend_02 }}'
+        key_name: '{{ ec2_key_name }}' # Clave privada de seguridad -> Vockey
+        security_group: '{{ ec2_security_group_frontend }}'
+        instance_type: '{{ ec2_instance_type }}' # Caractetisticas de la instancia
+        image_id: '{{ ec2_image }}' # AMI de la instancia
+        state: running
+
+    
+    
+    # Instancia -> Backend
+    - name: Crear instancia -> Backend
+      ec2_instance:
+        name: '{{ ec2_instance_name_backend }}'
+        key_name: '{{ ec2_key_name }}' # Clave privada de seguridad -> Vockey
+        security_group: '{{ ec2_security_group_backend }}'
+        instance_type: '{{ ec2_instance_type }}' # Caractetisticas de la instancia
+        image_id: '{{ ec2_image }}' # AMI de la instancia
+        state: running
+    
+      # Instancia -> NFS
+    - name: Crear instancia -> NFS
+      ec2_instance:
+        name: '{{ ec2_instance_name_nfs }}'
+        key_name: '{{ ec2_key_name }}'
+        security_group: '{{ ec2_security_group_nfs }}'
+        instance_type: '{{ ec2_instance_type }}'
+        image_id: '{{ ec2_image }}'
+        state: running
+
+    # instancia Balancer
+    - name: Crear instancia -> Balanceador de carga
+      ec2_instance:
+        name: '{{ ec2_instance_name_balancer }}'
+        key_name: "{{ ec2_key_name }}"
+        security_group: '{{ ec2_security_group_balancer }}'
+        instance_type: '{{ ec2_instance_type   }}'
+        image_id: '{{ ec2_image }}'
+        state: running
+      register: ec2_balancer
+
+    # Creación IP elástica -> Frontend
+    - name: Crear IP elástica y asociar al balanceador de carga
+      ec2_eip:
+        device_id: '{{ ec2_balancer.instances[0].instance_id }}'
+      register: eip # Registra informacion para su uso posterior en el Playbook
+
+    - name: Mostrar IP elástica
+      debug:
+        msg: "La IP elástica es: '{{ eip.public_ip }}'"

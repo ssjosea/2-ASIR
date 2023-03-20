@@ -1,0 +1,127 @@
+- name: Playbook para descartar una infraestructura basada en NFS Server con grupos de seguridad en Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:  
+    - name:
+      include_vars: 
+        vars.yml
+  
+  # Instancia Frontend-01
+    - name: Obtener el ID de la instancia a partir del nombre
+      ec2_instance_info:
+        filters:
+          "tag:Name": '{{ ec2_instance_name_frontend_01 }}' # Busca el nombre de la instancia
+          "instance-state-name": "running" # Debe estar encendida
+      register: ec2
+    
+    - name: Desasociar la IP elástica de la instancia Frontend
+      ec2_eip:
+        device_id: '{{ ec2.instances[0].instance_id }}' # Busca la IP elástica asociada a la instancia
+        state: absent # La elimina
+    
+    - name: Eliminar la instancia EC2
+      ec2_instance:
+        filters:
+          "tag:Name": '{{ ec2_instance_name_frontend }}'
+        state: absent
+    
+    - name: Eliminar el grupo de seguridad
+      ec2_group:
+        name: '{{ ec2_security_group_frontend }}'
+        state: absent
+
+  # -------------------------------------------------------------------------------------------------
+
+  # Instancia Frontend-02
+    - name: Obtener el ID de la instancia a partir del nombre
+      ec2_instance_info:
+        filters:
+          "tag:Name": '{{ ec2_instance_name_frontend_02 }}' # Busca el nombre de la instancia
+          "instance-state-name": "running" # Debe estar encendida
+      register: ec2
+    
+    - name: Desasociar la IP elástica de la instancia Frontend
+      ec2_eip:
+        device_id: '{{ ec2.instances[0].instance_id }}' # Busca la IP elástica asociada a la instancia
+        state: absent # La elimina
+    
+    - name: Eliminar la instancia EC2
+      ec2_instance:
+        filters:
+          "tag:Name": '{{ ec2_instance_name_frontend }}'
+        state: absent
+    
+    - name: Eliminar el grupo de seguridad
+      ec2_group:
+        name: '{{ ec2_security_group_frontend }}'
+        state: absent
+
+    # -------------------------------------------------------------------------------------------------
+
+    # Instancia Backend
+    - name: Obtener el ID de la instancia a partir del nombre
+      ec2_instance_info:
+        filters:
+          "tag:Name": '{{ ec2_instance_name_backend }}'
+          "instance-state-name": "running"
+      register: ec2
+
+    - name: Eliminar la instancia EC2
+      ec2_instance:
+        filters:
+          "tag:Name": '{{ ec2_instance_name_backend }}'
+        state: absent
+
+    - name: Eliminar el grupo de seguridad
+      ec2_group:
+        name: '{{ ec2_security_group_backend }}'
+        state: absent
+    
+    # -------------------------------------------------------------------------------------------------
+
+    # Instancia -> Balanceador de carga
+    - name: Obtener el id de instancia a partir del nombre
+      ec2_instance_info:
+        filters:
+          "tag:Name": "{{ ec2_instance_name_balancer }}"
+          "instance-state-name": "running"
+      register: ec2_balancer
+
+    - name: Desasociar de IP elástica de la instancia EC2
+      ec2_eip:
+        device_id: "{{ ec2_balancer.instances[0].instance_id }}"
+        state: absent
+
+    - name: Eliminar la instancia EC2
+      ec2_instance:
+        filters:
+          "tag:Name": "{{ ec2_instance_name_balancer }}"
+        state: absent
+
+    - name: Eliminar el grupo de seguridad
+      ec2_group:
+        name: "{{ ec2_security_group_balancer }}"
+        state: absent
+
+    # -------------------------------------------------------------------------------------------------
+
+    # Instancia NFS Server
+    - name: Obtener el id de instancia a partir del nombre
+      ec2_instance_info:
+        filters:
+          "tag:Name": "{{ ec2_instance_name_nfs }}"
+          "instance-state-name": "running"
+      register: ec2
+
+    - name: Eliminar la instancia EC2
+      ec2_instance:
+        filters:
+          "tag:Name": "{{ ec2_instance_name_nfs }}"
+        state: absent
+
+    - name: Eliminar el grupo de seguridad
+      ec2_group:
+        name: "{{ ec2_security_group_backend }}"
+        state: absent

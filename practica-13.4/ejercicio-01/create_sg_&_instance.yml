@@ -1,0 +1,90 @@
+---
+- name: Playbook para crear una infraestructura basada en Backend - Frontend con grupos de seguridad en Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:  
+    - name:
+      include_vars: 
+        vars.yml
+    
+    # Grupo de seguridad -> Frontend
+    - name:
+      ec2_group:
+        name: '{{ ec2_security_group_frontend }}'
+        description: '{{ ec2_security_group_description_frontend }}'
+        rules: 
+          - proto: tcp # Protocolo
+            from_port: 80 # Puerto de entrada -> HTTP
+            to_port: 80 # Puerto de salida -> HTTP
+            cidr_ip: 0.0.0.0/0 # Acepta conexion desde cualquier IP
+
+          - proto: tcp
+            from_port: 22 # Puerto de entrada -> SSH
+            to_port: 22 # Puerto de salida -> SSH
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 443 # Puerto de entrada -> HTTPS
+            to_port: 443 # Puerto de salida -> HTTPS
+            cidr_ip: 0.0.0.0/0
+
+    # Grupo de seguridad -> Backend
+    - name:
+      ec2_group:
+        name: '{{ ec2_security_group_backend}}'
+        description: '{{ ec2_security_group_description_backend }}'
+        rules: 
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+
+          - proto: tcp
+            from_port: 3306 # Puerto de entrada -> MySQL
+            to_port: 3306 # Puerto de salida -> MySQL
+            cidr_ip: 0.0.0.0/0
+    
+    # ---------------------------------------------------------------------------------------------------
+
+    # Instancia -> Frontend
+    - name: 
+      ec2_instance:
+        name: '{{ ec2_instance_name_frontend }}'
+        key_name: '{{ ec2_key_name }}' # Clave privada de seguridad -> Vockey
+        security_group: '{{ ec2_security_group_frontend }}'
+        instance_type: '{{ ec2_instance_type }}' # Caractetisticas de la instancia
+        image_id: '{{ ec2_image }}' # AMI de la instancia
+        state: running
+      register: ec2_frontend
+
+    # Instancia -> Backend
+    - name: 
+      ec2_instance:
+        name: '{{ ec2_instance_name_backend }}'
+        key_name: '{{ ec2_key_name }}' # Clave privada de seguridad -> Vockey
+        security_group: '{{ ec2_security_group_backend }}'
+        instance_type: '{{ ec2_instance_type }}' # Caractetisticas de la instancia
+        image_id: '{{ ec2_image }}' # AMI de la instancia
+        state: running
+    
+    # Creación IP elástica -> Frontend
+    - name: Crear IP elástica y asociar a la instancia
+      ec2_eip:
+        device_id: '{{ ec2_frontend.instances[0].instance_id }}'
+      register: eip # Registra informacion para su uso posterior en el Playbook
+
+    - name: Mostrar IP elástica
+      debug:
+        msg: "La IP elástica es: '{{ eip.public_ip }}'"
