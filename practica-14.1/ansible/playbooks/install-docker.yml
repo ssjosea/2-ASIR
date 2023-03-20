@@ -1,0 +1,70 @@
+---
+- name: Playbook para la instalación de Docker // Docker-Compose
+  hosts: aws
+  become: yes
+
+  tasks:
+    - name: Actualizar repositorios
+      apt:
+        update_cache: true
+
+    - name: Instalar Docker.io
+      apt:
+        name: docker.io
+        state: present
+    
+    - name: Crear directorio para Docker-Compose
+      file:
+        path: /home/ubuntu/.docker/cli-plugins
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: 0775
+
+    - name: Descargar Docker-Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-linux-x86_64
+        dest: /home/ubuntu/.docker/cli-plugins/docker-compose
+        owner: ubuntu
+        group: ubuntu
+        mode: 0775
+
+    - name: Agregar el grupo "docker"
+      user: 
+        name: ubuntu
+        groups: docker
+        append: true
+
+    - name: Instalar Python # Necesario para el funcionamiento de Docker y Docker-Compose
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Instalar Docker
+      pip:
+        name: docker
+        state: present
+
+    - name: Instalar Docker-Compose
+      pip:
+        name: docker-compose
+        state: present
+
+    - name: Cambiar permisos -> /var/run/docker.sock
+      file:
+        path: /var/run/docker.sock
+        mode: 0777
+        
+    - name: Reiniciar Docker
+      service:
+        name: docker
+        state: restarted
+
+    - name: Mover contenido del directorio docker a la instancia
+      copy:
+        src: ../../docker/
+        dest: /home/ubuntu/docker
+        mode: 0775
+        owner: ubuntu
+        group: ubuntu
+      

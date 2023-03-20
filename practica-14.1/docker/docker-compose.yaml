@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:6.1.1-apache
+    # ports:
+    #   - 80:80
+    environment: 
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+    volumes: 
+      - wordpress_data:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: always
+    networks:
+      - frontend-network
+      - backend-network
+
+  # wpcli:
+  #   image: wordpress:cli-php8.2
+  #   depends on:
+  #     - wordpress
+  #   enviroment:
+  #     - WORDPRESS_DB_HOST=mysql
+  #     - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+  #     - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+  #     - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+  #     - MYSQL_USER=${WORDPRESS_DB_USER}
+  #     - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
+
+  mysql:
+    image: mysql:8.0
+    # ports:
+    #   - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${WORDPRESS_DB_NAME}
+      - MYSQL_USER=${WORDPRESS_DB_USER}
+      - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    healthcheck:
+      test: mysql --user=${WORDPRESS_DB_USER}  --password=${WORDPRESS_DB_PASSWORD} -e "SHOW DATABASES;"
+      interval: 5s
+      timeout: 2s
+      retries: 5
+    networks:
+      - backend-network
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0-apache
+    # ports:
+    #   - 8080:80
+    environment: 
+      - PMA_ARBITRARY=1
+    restart: always
+    networks:
+      - frontend-network
+      - backend-network
+
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ssl_certs_data:/var/lib/https-portal
+    restart: always
+    environment:
+      DOMAINS: 'joseawordpress.hopto.org -> http://wordpress:80'
+      STAGE: 'production'
+    restart: always
+    networks:
+      - frontend-network
+    
+volumes: 
+  mysql_data:
+  wordpress_data:
+  ssl_certs_data:
+
+networks:
+  frontend-network:
+  backend-network:
