@@ -1,0 +1,10 @@
+[frontend]
+52.91.128.246
+
+[backend]
+34.227.92.160
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/asir06/Escritorio/Jose A. Estrella Tijeras/IAW/vockey.pem
+ansible_ssh_common_args='-o StrictHostKeyChecking=accept-new'

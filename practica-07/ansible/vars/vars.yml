@@ -1,0 +1,20 @@
+DB_NAME: db_name
+DB_USER: db_user
+DB_PASS: db_pass
+
+PHPMYADMIN_ADD_PASSWORD: password
+STATS_USER: usuario
+STATS_PASSWORD: usuario
+
+DB_HOST_PRIVATE_IP: 172.31.53.142 
+
+DOMINIO_CERBOT: joseasir.no-ip.org
+EMAIL: jose@demo.es
+
+WP_HOME: https://joseiaw.hopto.org
+WP_SITEURL: https://joseiaw.hopto.org/wordpress
+
+php:
+  - php
+  - libapache2-mod-php 
+  - php-mysql

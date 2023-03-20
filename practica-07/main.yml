@@ -1,0 +1,13 @@
+---
+- name: Instalacion herramientas backend
+  import_playbook: ansible/back/install_backend.yml
+
+- name: Instalacion herramientas frontend
+  import_playbook: ansible/front/install_frontend.yml
+
+- name: Instalacion deploy frontend
+  import_playbook: ansible/front/deploy_frontend.yml
+
+- name: Instalacion deploy backend
+  import_playbook: ansible/back/deploy_backend.yml
+

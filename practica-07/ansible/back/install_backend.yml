@@ -1,0 +1,23 @@
+---
+- name: Playbook instalar MySQL en la instancia Backend
+  hosts: backend
+  become: yes
+
+
+  tasks:
+    - name: Actualizar los paquetes
+      apt:
+        update_cache: yes
+
+    - name: Instalar MySQL
+      apt: 
+        name: mysql-server
+        state: present
+    
+    - name: Configuración de MySQL Server para aceptar conexiones desde todas la interfaces de red
+      shell: sed -i "s/127.0.0.1/0.0.0.0/" /etc/mysql/mysql.conf.d//mysqld.cnf
+
+    - name: Reiniciar MySQL
+      service:
+        name: mysql
+        state: restarted

@@ -1,0 +1,64 @@
+---
+- name: Playbook instalar las herramientas para el deploy del frontend
+  hosts: frontend
+  become: yes
+
+  vars_files: 
+    - ../vars/variables.yml
+
+  tasks:
+    - name: Clonar repositorio con la pila LAMP
+      git:
+        repo: "https://github.com/josejuansanchez/iaw-practica-lamp.git"
+        dest: /tmp/github/
+        clone: yes
+        update: yes
+
+    - name: Movemos los recursos del repositorio al directorio /html
+      copy:
+        remote_src: yes
+        src: /tmp/github/src/
+        dest: /var/www/html
+    
+    - name: Cambio en la variable de config.php -> localhost
+      replace:
+        path: /var/www/html/config.php
+        regexp: "localhost"
+        replace: "{{ DB_HOST_PRIVATE_IP }}"
+    
+    - name: Cambio en la variable de config.php -> lamp_db
+      replace:
+        path: /var/www/html/config.php
+        regexp: "lamp_db"
+        replace: "{{ DB_NAME }}"
+    
+    - name: Cambio en la variable de config.php -> lamp_user
+      replace:
+        path: /var/www/html/config.php
+        regexp: "lamp_user"
+        replace: "{{ DB_USER }}"
+    
+    - name: Cambio en la variable de config.php -> lamp_pass
+      replace:
+        path: /var/www/html/config.php
+        regexp: "lamp_password"
+        replace: "{{ DB_PASS }}"
+    
+    - name: Cambiar permisos del directorio (chown)
+      file:
+          path: /var/www/html
+          state: directory
+          owner: www-data
+          group: www-data
+          recurse: yes
+    
+    - name: Cambiar prioridades index.php
+      replace:
+        path: /etc/apache2/mods-enabled/dir.conf 
+        regexp: "DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm"
+        replace: "DirectoryIndex index.php index.cgi index.pl index.html index.xhtml index.htm"
+  
+    - name: Reiniciar Apache
+      service:
+        name: apache2
+        state: restarted
