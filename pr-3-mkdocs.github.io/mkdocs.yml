@@ -1,0 +1,10 @@
+site_name: IAW
+
+nav:
+    - Principal: index.md
+    - Acerca de: about.md
+    - Práctica 07: practica-07.md
+    - Práctica 09: practica-09.md
+
+
+theme: material
