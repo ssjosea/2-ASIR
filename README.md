@@ -6,7 +6,7 @@ En este repositorio he añadido todas las prácticas que he realizado a lo largo
 
 La organización de este repositorio se organiza en varias ramas las cuales se explican a continuación:
 
-- **`main`**: Contiene el archivo **README.md** con la explicación de como está organizado el repositorio.
+- [**`main`**](https://github.com/ssjosea/2-ASIR/tree/main): Contiene el archivo **README.md** con la explicación de como está organizado el repositorio.
 
 - [**`1º-Trimestre`**](https://github.com/ssjosea/2-ASIR/tree/1%C2%BA-Trimestre): Prácticas realizadas durante el primer trimestre ([**``practica-01``**](https://github.com/ssjosea/2-ASIR/tree/1%C2%BA-Trimestre/practica-01) a [**``practica-09``**](https://github.com/ssjosea/2-ASIR/tree/1%C2%BA-Trimestre/practica-09)).
 
