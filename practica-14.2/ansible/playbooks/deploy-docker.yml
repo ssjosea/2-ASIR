@@ -1,0 +1,13 @@
+---
+- name: Playbook para desplegar Docker
+  hosts: aws
+  become: true
+  
+  tasks:
+    - name: Desplegar Docker-Compose
+      docker_compose:
+        project_src: docker
+        files:
+          - docker-compose.yaml
+        state: present
+        docker_host: unix:///var/run/docker.sock

@@ -1,0 +1,6 @@
+
+- name: Instalación de Docker, Docker-Compose y Python
+  import_playbook: playbooks/install-docker.yml
+
+- name: Despliegue de Docker-Compose
+  import_playbook: playbooks/deploy-docker.yml
