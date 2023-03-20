@@ -1,0 +1,16 @@
+---
+DB_HOST_PRIVATE_IP: localhost
+DB_NAME: db_name
+DB_USER: db_user
+DB_PASS: db_pass
+
+WP_HOME: https://joseiaw.hopto.org
+WP_SITEURL: https://joseiaw.hopto.org/wordpress
+
+EMAIL: jose@demo.es
+DOMAIN_CERBOT: joseiaw.hopto.org
+
+php:
+  - php
+  - libapache2-mod-php 
+  - php-mysql

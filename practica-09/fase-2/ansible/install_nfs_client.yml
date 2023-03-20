@@ -1,0 +1,26 @@
+- name: Playbook para el cliente NFS
+  hosts: frontend
+  become: yes
+
+  tasks: 
+
+  - name: Añadimos las variables
+    include_vars:
+      ./variables.yml
+
+  - name: Actualizar los repositorios
+    apt:
+      update_cache: yes
+
+  - name: Instalamos el cliente nfs
+    apt:
+      name: nfs-common
+      state: present
+
+  - name: Montamos el directorio compartido
+    ansible.posix.mount:
+      path: /var/www/html
+      src: "{{ NFS_SERVER_IP_PRIVATE }}:/var/www/html"
+      fstype: nfs
+      opts: auto,nofail,noatime,nolock,intr,tcp,actimeo=1800
+      state: mounted

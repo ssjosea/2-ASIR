@@ -1,0 +1,37 @@
+---
+- name: Playbook para instalar el servidor NFS
+  hosts: nfs
+  become: yes
+
+  tasks:
+
+  - name: Actualizar los repositorios
+    apt:
+      update_cache: yes
+
+  - name: Instalar NFS Server
+    apt:
+      name: nfs-kernel-server
+
+  - name: Crear directorio html
+    ansible.builtin.file:
+      path: /var/www/html
+      state: directory
+      mode: 0755
+      owner: nobody
+      group: nogroup
+
+  - name: Borrar fichero exports
+    file:
+      path: /etc/exports
+      state: absent
+
+  - name: Mover archivos de configuración
+    copy:
+      src: ../conf/exports
+      dest: /etc/exports
+
+  - name: Reiniciamos el servidor servidor nfs
+    service:
+      name: nfs-kernel-server
+      state: restarted

@@ -1,0 +1,23 @@
+DB_NAME: wp_name
+DB_USER: wp_user
+DB_PASS: wp_pass
+
+DB_HOST_PRIVATE_IP: 172.31.2.108
+
+DOMAIN_CERBOT: joseiawfase2.sytes.net
+EMAIL: jose@demo.es
+
+WP_HOME: https://joseiawfase2.sytes.net
+WP_SITEURL: https://joseiawfase2.sytes.net/wordpress
+
+php:
+  - php
+  - libapache2-mod-php 
+  - php-mysql
+
+# IP privada del servidor NFS
+NFS_SERVER_IP_PRIVATE: 172.31.14.26
+
+# IP de las instancias Front-End
+IP_HTTP_SERVER_1: 44.198.185.1
+IP_HTTP_SERVER_2: 3.92.8.93

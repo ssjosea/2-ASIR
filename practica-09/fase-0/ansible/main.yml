@@ -1,0 +1,9 @@
+---
+- name: Instalacion pila LAMP
+  import_playbook: install_lamp.yml
+
+- name: Instalacion Certbot
+  import_playbook: install_cerbot.yml
+
+- name: Instalacion WordPress
+  import_playbook: deploy_wordpress.yml

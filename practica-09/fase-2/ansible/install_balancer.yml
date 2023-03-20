@@ -1,0 +1,89 @@
+- name: Playbook para implementar el balanceador de carga 
+  hosts: balancer
+  become: yes
+
+  tasks:
+    - name: Añadimos las variables
+      include_vars:
+        ./variables.yml
+
+    - name: Actualizar repositorios
+      apt:
+        update_cache: yes
+
+    - name: Instalar el servidor web Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+        name: proxy
+        state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: proxy_http
+          state: present
+
+    - name: Habilitar modulos necesarios  
+      apache2_module:
+          name: proxy_ajp
+          state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: rewrite
+          state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: deflate
+          state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: headers
+          state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: proxy_balancer
+          state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: proxy_connect
+          state: present
+
+    - name: Habilitar modulos necesarios  
+      apache2_module:
+          name: proxy_html
+          state: present
+
+    - name: Habilitar modulos necesarios 
+      apache2_module:
+          name: lbmethod_byrequests
+          state: present
+
+    - name: Crear el contenido de 000-conf-default.conf
+      template:
+        src: ../balancer-conf/000-default.conf
+        dest: /etc/apache2/sites-available/
+        
+    - name: Cambiamos el contenido del archivo 000-default.conf
+      replace:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: IP_HTTP_SERVER_1
+        replace: "{{ IP_HTTP_SERVER_1 }}"
+
+    - name: Cambiamos el contenido del archivo 000-default.conf
+      replace:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: IP_HTTP_SERVER_2
+        replace: "{{ IP_HTTP_SERVER_2 }}"
+
+    - name: Reiniciar apache2
+      service: 
+        name: apache2
+        state: restarted

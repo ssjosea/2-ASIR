@@ -1,0 +1,15 @@
+---
+- name: Instalacion pila LAMP en Front-End
+  import_playbook: install_frontend.yml
+
+- name: Instalacion MySQL en Back-End
+  import_playbook: install_backend.yml
+
+- name: Creacion base de datos en Back-End
+  import_playbook: deploy_backend.yml
+
+- name: Instalacion Certbot
+  import_playbook: install_cerbot.yml
+
+- name: Instalacion WordPress
+  import_playbook: deploy_wordpress.yml

@@ -1,0 +1,39 @@
+---
+- name: Playbook instalar las herramientas para el deploy del Backend
+  hosts: backend
+  become: yes
+
+  vars_files: 
+    - ./variables.yml
+
+  tasks:
+
+    - name: Instalar modulo Python3-pip
+      apt:
+        name: python3-pip
+        state: present
+    
+    - name: Instalar modulo PyMySQL
+      pip:
+        name: pymysql 
+        state: present
+
+    - name: Creamos base de datos en MySQL 
+      mysql_db:
+        name: "{{ DB_NAME }}"
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Creamos usuario para la base de datos en MySQL 
+      mysql_user:
+        name: "{{ DB_USER }}"
+        password: "{{ DB_PASS }}"
+        host: "%"
+        priv: "{{ DB_NAME }}.*:ALL"
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock 
+    
+    - name: Reiniciar MySQL
+      service:
+        name: mysql
+        state: restarted

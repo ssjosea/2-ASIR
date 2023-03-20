@@ -1,0 +1,47 @@
+- name: Playbook para instalar la pila LAMP
+  hosts: frontend
+  become: yes
+
+  tasks:
+  - name: Variables
+    include_vars:
+      ./variables.yml
+
+  - name: Actualizar los repositorios
+    apt:
+      update_cache: yes
+
+  - name: Instalar el servidor web Apache
+    apt:
+      name: apache2
+      state: present
+
+  - name: Instalar PHP 
+    apt:
+      name: '{{ php }}'
+      state: present
+
+  - name: Eliminar archivos
+    file:
+      path: /etc/apache2/sites-available/000-default.conf
+      state: absent
+
+  - name: Mover archivos de configuración -> /etc/apache2/sites-available
+    copy:
+      src: ../conf/000-default.conf
+      dest: /etc/apache2/sites-available/
+
+  - name: Mover dir.conf
+    copy:
+      src: ../conf/dir.conf
+      dest: /etc/apache2/mods-available
+
+  - name: Habilitar módulo rewrite
+    apache2_module:
+        name: rewrite
+        state: present
+
+  - name: Reiniciamos servidor apache
+    service:
+      name: apache2
+      state: restarted 

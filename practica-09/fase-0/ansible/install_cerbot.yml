@@ -1,0 +1,43 @@
+---
+- name: Playbook para instalar Cerbot
+  hosts: all
+  become: yes
+
+  vars_files:
+    ./variables.yml
+
+  tasks:
+
+    - name: Reinicio del servidor Apache
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
+
+    - name: Instalar snap
+      command: snap install core
+
+    - name: Actualizar repositorios
+      command: snap refresh core
+    
+    - name: Instalamos cerbot
+      snap:
+        name: certbot
+        state: present
+        classic: true
+    
+    - name: Crear un usuario para cerbot --------
+      ansible.builtin.file:
+        src: /snap/bin/certbot
+        dest: /usr/bin/certbot
+        owner: www-data
+        group: www-data
+        state: link
+
+    #- name: Obtener certificado
+    #  command: certbot --apache -d "{{ DOMAIN_CERBOT }}" -m "{{ EMAIL }}" --agree-tos
+    #  register: finish
+    #  changed_when: finish.rc !=0
+
+    - name: Comprobar temporizador para renovacion de certificados -------
+      systemd:
+        name: list-timers
