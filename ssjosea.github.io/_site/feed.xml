@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2023-02-23T15:56:34-06:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Blog personal de Josea - Prácticas IAW</title><subtitle>Esta práctica se basa en la creación de blogs con Jekyll y GitHub Pages.  Jekyll es un generador de sitios web estáticos que nos permite crear de forma sencilla blogs,  sitios webs personales o webs para proyectos. Los sitios webs generados con Jekyll no usan una base de datos, el contenido del sitio web está escrito en archivos de texto plano en formato Markdown (o Textile) y plantillas Liquid.</subtitle><entry><title type="html">Practica 9</title><link href="http://0.0.0.0:4000/practica-09/2023/02/23/practica-9.html" rel="alternate" type="text/html" title="Practica 9" /><published>2023-02-23T06:49:55-06:00</published><updated>2023-02-23T06:49:55-06:00</updated><id>http://0.0.0.0:4000/practica-09/2023/02/23/practica-9</id><content type="html" xml:base="http://0.0.0.0:4000/practica-09/2023/02/23/practica-9.html"><![CDATA[<h1 id="ejercicio-9---implantación-de-wordpress-en-amazon-web-services-aws-sobre-la-pila-lamp-en-tres-fases">Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases</h1>
+
+<h2 id="jose-a-estrella-tijeras">Jose A. Estrella Tijeras</h2>
+
+<p>Para esta práctica el objetivo será implementar WordPress en tres fases:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    practica-09
+         .
+         ├── fase-0
+         ├── fase-1
+         └── fase-2
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h2 id="fase-0"><strong>Fase 0:</strong></h2>
+    <ul>
+      <li>
+        <p>1 instancia con la instalación de WordPress mediante Ansible.</p>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_lamp.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_lamp.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2 id="fase-1"><strong>Fase 1:</strong></h2>
+
+    <p><img src="images/pr-09/arquitectura-pr09-fase01.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>2 instancias con la instalación de WordPress mediante Ansible.</p>
+
+        <ul>
+          <li>1 Back-End con MySQL para la creación y la gestión de una base de datos. -&gt; <strong>Necesario habilitar el puerto MySQL/Aurora en las reglas de entrada (3306)</strong>.</li>
+          <li>1 Front-End con Apache donde instalaremos WordPress para mostrar la web.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2 id="fase-2"><strong>Fase 2:</strong></h2>
+
+    <p><img src="images/pr-09/arquitectura-pr09-fase02.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>5 instancias con la instalación de WordPress mediante Ansible agrupadas de la siguiente manera:</p>
+
+        <ul>
+          <li>1 servidor NFS desde el que instalaremos WordPress y lo “compartiremos” con los clientes NFS, que serán la cara pública de la arquitectura. -&gt; <strong>Necesario habilitar el puerto NFS en las reglas de entrada (2048)</strong></li>
+          <li>2 <strong>Front-End</strong> que a la vez serán clientes <strong>NFS</strong> que montarán el directorio <strong>/wordpress</strong> del servidor NFS y mostrarán la web.</li>
+          <li>1 balanceador de carga que recibirá las peticiones HTTPS y las distribuirá entre los dos Front-End.</li>
+          <li>1 Back-End con MySQL para la creación y la gestión de una base de datos -&gt; <strong>Necesario habilitar el puerto MySQL/Aurora en las reglas de entrada (3306)</strong>.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_balancer.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs_client.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">balancer-conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">exports</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_balancer.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs_client.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>]]></content><author><name></name></author><category term="practica-09" /><summary type="html"><![CDATA[Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases]]></summary></entry><entry><title type="html">Practica 7</title><link href="http://0.0.0.0:4000/practica-07/2023/02/23/practica-7.html" rel="alternate" type="text/html" title="Practica 7" /><published>2023-02-23T06:49:55-06:00</published><updated>2023-02-23T06:49:55-06:00</updated><id>http://0.0.0.0:4000/practica-07/2023/02/23/practica-7</id><content type="html" xml:base="http://0.0.0.0:4000/practica-07/2023/02/23/practica-7.html"><![CDATA[<h1 id="ejercicio-7---pila-lamp-en-dos-niveles">Ejercicio 7 - Pila LAMP en dos niveles</h1>
+<h2 id="jose-a-estrella-tijeras">Jose A. Estrella Tijeras</h2>
+
+<p>En esta practica vamos a implemententar la pila web LAMP en 2 instancias AWS en la ultima versión de Ubuntu Server</p>
+
+<p>La arquitectura estará formada por:</p>
+
+<ul>
+  <li>Una capa de front-end, formada por un servidor web con Apache HTTP Server.</li>
+  <li>Una capa de back-end, formada por un servidor MySQL.</li>
+</ul>
+
+<p><img src="https://github.com/ssjosea/practica-07/blob/main/images/arquitectura.png?raw=true" alt="" /></p>
+
+<p>Contenidos del repositorio:</p>
+<ul>
+  <li><a href="https://github.com/ssjosea/practica-07/tree/main/ansible"><code class="language-plaintext highlighter-rouge">ansible</code></a>: Scripts en <strong>ansible (.yml)</strong> -&gt; Directorios organizados en <strong>back</strong>; para la instalación de la instancia Back-End y <strong>front</strong> para la instancia Front-End.
+    <ul>
+      <li><a href="https://github.com/ssjosea/practica-07/tree/main/ansible/back"><code class="language-plaintext highlighter-rouge">back</code></a>
+        <ul>
+          <li><a href="https://github.com/ssjosea/practica-07/blob/main/ansible/back/install_backend.yml"><code class="language-plaintext highlighter-rouge">install_backend</code></a>: Instalación de MySQL y configuración de MySQL Server para aceptar conexiones desde todas la interfaces de red</li>
+          <li><a href="https://github.com/ssjosea/practica-07/blob/main/ansible/back/deploy_backend.yml"><code class="language-plaintext highlighter-rouge">deploy_backend</code></a>: Instalación de Python y modulo PyMySQL. Creación de una base de datos y un usuario y pila LAMP.</li>
+        </ul>
+      </li>
+      <li><a href="https://github.com/ssjosea/practica-07/tree/main/ansible/front"><code class="language-plaintext highlighter-rouge">front</code></a>
+        <ul>
+          <li><a href="https://github.com/ssjosea/practica-07/blob/main/ansible/front/install_frontend.yml"><code class="language-plaintext highlighter-rouge">install_frontend</code></a>: Instalación Apache y librerias de PHP.</li>
+          <li><a href="https://github.com/ssjosea/practica-07/blob/main/ansible/front/deploy_frontend.yml"><code class="language-plaintext highlighter-rouge">deploy_frontend</code></a>: Instalación pila LAMP y cambios en las variables del fichero <strong>/var/www/html/config.php</strong>. Cambiamos las propiedades del fichero <strong>/etc/apache2/mods-enabled/dir.conf</strong>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="https://github.com/ssjosea/practica-07/tree/main/scripts"><code class="language-plaintext highlighter-rouge">scripts</code></a>: Scripts en <strong>bash (.sh)</strong> -&gt; Instalación de las instancias <a href="https://github.com/ssjosea/practica-07/tree/main/scripts/back"><strong>Back-End</strong></a> y  <a href="https://github.com/ssjosea/practica-07/tree/main/scripts/front"><strong>Front-End</strong> </a>.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/ssjosea/practica-07/blob/main/install_cerbot.yml"><code class="language-plaintext highlighter-rouge">ìnstall_cerbot</code></a>: Script de Ansible para la instalación del certificado Cerbot.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/ssjosea/practica-07/blob/main/inventario"><code class="language-plaintext highlighter-rouge">inventario</code></a>: Inventario de Ansible con las configuraciones de los 2 hosts (Front-End y backend) con sus IPs públicas y configuración de usuario y ssh.</p>
+  </li>
+  <li><a href="https://github.com/ssjosea/practica-07/blob/main/main.yml"><code class="language-plaintext highlighter-rouge">main.yml</code></a>: Playbook principal donde se ordena que se ejecuten el resto de jugadas por orden.</li>
+</ul>
+
+<p>Configuración de reglas de entrada de AWS:</p>
+
+<ul>
+  <li>Front-End:
+    <ul>
+      <li>Puertos habilitados:
+        <ul>
+          <li>HTTP: 80</li>
+          <li>HTTPS: 443</li>
+          <li>SSH: 22</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://github.com/ssjosea/practica-07/blob/main/images/puertos-frontend.png?raw=true" alt="" /></p>
+<ul>
+  <li>Back-End:
+    <ul>
+      <li>Puertos habilitados:
+        <ul>
+          <li>HTTP: 80</li>
+          <li>HTTPS: 443</li>
+          <li>SSH: 22</li>
+          <li>MySQL: 3306</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://github.com/ssjosea/practica-07/blob/main/images/puertos-backend.png?raw=true" alt="" /></p>]]></content><author><name></name></author><category term="practica-07" /><summary type="html"><![CDATA[Ejercicio 7 - Pila LAMP en dos niveles Jose A. Estrella Tijeras]]></summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://0.0.0.0:4000/jekyll/update/2023/02/15/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2023-02-15T06:49:55-06:00</published><updated>2023-02-15T06:49:55-06:00</updated><id>http://0.0.0.0:4000/jekyll/update/2023/02/15/welcome-to-jekyll</id><content type="html" xml:base="http://0.0.0.0:4000/jekyll/update/2023/02/15/welcome-to-jekyll.html"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+
+<p>Jekyll requires blog post files to be named according to the following format:</p>
+
+<p><code class="language-plaintext highlighter-rouge">YEAR-MONTH-DAY-title.MARKUP</code></p>
+
+<p>Where <code class="language-plaintext highlighter-rouge">YEAR</code> is a four-digit number, <code class="language-plaintext highlighter-rouge">MONTH</code> and <code class="language-plaintext highlighter-rouge">DAY</code> are both two-digit numbers, and <code class="language-plaintext highlighter-rouge">MARKUP</code> is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+
+<p>Jekyll also offers powerful support for code snippets:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
+<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+
+<p>Check out the <a href="https://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.]]></summary></entry></feed>

@@ -1,0 +1,167 @@
+I"�#<h1 id="ejercicio-9---implantación-de-wordpress-en-amazon-web-services-aws-sobre-la-pila-lamp-en-tres-fases">Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases</h1>
+
+<h2 id="jose-a-estrella-tijeras">Jose A. Estrella Tijeras</h2>
+
+<p>Para esta práctica el objetivo será implementar WordPress en tres fases:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    practica-09
+         .
+         ├── fase-0
+         ├── fase-1
+         └── fase-2
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h2 id="fase-0"><strong>Fase 0:</strong></h2>
+    <ul>
+      <li>
+        <p>1 instancia con la instalación de WordPress mediante Ansible.</p>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_lamp.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_lamp.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2 id="fase-1"><strong>Fase 1:</strong></h2>
+
+    <p><img src="images/pr-09/arquitectura-pr09-fase01.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>2 instancias con la instalación de WordPress mediante Ansible.</p>
+
+        <ul>
+          <li>1 Back-End con MySQL para la creación y la gestión de una base de datos. -&gt; <strong>Necesario habilitar el puerto MySQL/Aurora en las reglas de entrada (3306)</strong>.</li>
+          <li>1 Front-End con Apache donde instalaremos WordPress para mostrar la web.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2 id="fase-2"><strong>Fase 2:</strong></h2>
+
+    <p><img src="images/pr-09/arquitectura-pr09-fase02.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>5 instancias con la instalación de WordPress mediante Ansible agrupadas de la siguiente manera:</p>
+
+        <ul>
+          <li>1 servidor NFS desde el que instalaremos WordPress y lo “compartiremos” con los clientes NFS, que serán la cara pública de la arquitectura. -&gt; <strong>Necesario habilitar el puerto NFS en las reglas de entrada (2048)</strong></li>
+          <li>2 <strong>Front-End</strong> que a la vez serán clientes <strong>NFS</strong> que montarán el directorio <strong>/wordpress</strong> del servidor NFS y mostrarán la web.</li>
+          <li>1 balanceador de carga que recibirá las peticiones HTTPS y las distribuirá entre los dos Front-End.</li>
+          <li>1 Back-End con MySQL para la creación y la gestión de una base de datos -&gt; <strong>Necesario habilitar el puerto MySQL/Aurora en las reglas de entrada (3306)</strong>.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_balancer.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs_client.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">balancer-conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">exports</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_balancer.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs_client.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+:ET

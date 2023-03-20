@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Practica 9 | Blog personal de Josea - Prácticas IAW</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Practica 9" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases" />
+<meta property="og:description" content="Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases" />
+<link rel="canonical" href="http://0.0.0.0:4000/practica-09/2023/02/23/practica-9.html" />
+<meta property="og:url" content="http://0.0.0.0:4000/practica-09/2023/02/23/practica-9.html" />
+<meta property="og:site_name" content="Blog personal de Josea - Prácticas IAW" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-02-23T06:49:55-06:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Practica 9" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-02-23T06:49:55-06:00","datePublished":"2023-02-23T06:49:55-06:00","description":"Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases","headline":"Practica 9","mainEntityOfPage":{"@type":"WebPage","@id":"http://0.0.0.0:4000/practica-09/2023/02/23/practica-9.html"},"url":"http://0.0.0.0:4000/practica-09/2023/02/23/practica-9.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="Blog personal de Josea - Prácticas IAW" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Blog personal de Josea - Prácticas IAW</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Practica 9</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2023-02-23T06:49:55-06:00" itemprop="datePublished">Feb 23, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="ejercicio-9---implantación-de-wordpress-en-amazon-web-services-aws-sobre-la-pila-lamp-en-tres-fases">Ejercicio 9 - Implantación de Wordpress en Amazon Web Services (AWS) sobre la pila LAMP en tres fases</h1>
+
+<h2 id="jose-a-estrella-tijeras">Jose A. Estrella Tijeras</h2>
+
+<p>Para esta práctica el objetivo será implementar WordPress en tres fases:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    practica-09
+         .
+         ├── fase-0
+         ├── fase-1
+         └── fase-2
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h2 id="fase-0"><strong>Fase 0:</strong></h2>
+    <ul>
+      <li>
+        <p>1 instancia con la instalación de WordPress mediante Ansible.</p>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_lamp.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_lamp.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2 id="fase-1"><strong>Fase 1:</strong></h2>
+
+    <p><img src="images/pr-09/arquitectura-pr09-fase01.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>2 instancias con la instalación de WordPress mediante Ansible.</p>
+
+        <ul>
+          <li>1 Back-End con MySQL para la creación y la gestión de una base de datos. -&gt; <strong>Necesario habilitar el puerto MySQL/Aurora en las reglas de entrada (3306)</strong>.</li>
+          <li>1 Front-End con Apache donde instalaremos WordPress para mostrar la web.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h2 id="fase-2"><strong>Fase 2:</strong></h2>
+
+    <p><img src="images/pr-09/arquitectura-pr09-fase02.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>5 instancias con la instalación de WordPress mediante Ansible agrupadas de la siguiente manera:</p>
+
+        <ul>
+          <li>1 servidor NFS desde el que instalaremos WordPress y lo “compartiremos” con los clientes NFS, que serán la cara pública de la arquitectura. -&gt; <strong>Necesario habilitar el puerto NFS en las reglas de entrada (2048)</strong></li>
+          <li>2 <strong>Front-End</strong> que a la vez serán clientes <strong>NFS</strong> que montarán el directorio <strong>/wordpress</strong> del servidor NFS y mostrarán la web.</li>
+          <li>1 balanceador de carga que recibirá las peticiones HTTPS y las distribuirá entre los dos Front-End.</li>
+          <li>1 Back-End con MySQL para la creación y la gestión de una base de datos -&gt; <strong>Necesario habilitar el puerto MySQL/Aurora en las reglas de entrada (3306)</strong>.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Contenido:</strong></p>
+
+        <ul>
+          <li><strong><code class="language-plaintext highlighter-rouge">ansible</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_balancer.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs_client.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">inventario</code></li>
+              <li><code class="language-plaintext highlighter-rouge">main.yml</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.yml</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">balancer-conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">conf</code></strong>
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">000-default.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">dir.conf</code></li>
+              <li><code class="language-plaintext highlighter-rouge">exports</code></li>
+            </ul>
+          </li>
+          <li><strong><code class="language-plaintext highlighter-rouge">scripts</code></strong>:
+            <ul>
+              <li><code class="language-plaintext highlighter-rouge">deploy_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">deploy_wordpress.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_backend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_balancer.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_cerbot.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_frontend.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs_client.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">install_nfs.sh</code></li>
+              <li><code class="language-plaintext highlighter-rouge">variables.sh</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+  </div><a class="u-url" href="/practica-09/2023/02/23/practica-9.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Blog personal de Josea - Prácticas IAW</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Blog personal de Josea - Prácticas IAW</li><li><a class="u-email" href="mailto:joseasir@outlook.com">joseasir@outlook.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ssjosea"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ssjosea</span></a></li><li><a href="https://www.twitter.com/joseassj"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">joseassj</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Esta práctica se basa en la creación de blogs con Jekyll y GitHub Pages.  Jekyll es un generador de sitios web estáticos que nos permite crear de forma sencilla blogs,  sitios webs personales o webs para proyectos. Los sitios webs generados con Jekyll no usan una base de datos, el contenido del sitio web está escrito en archivos de texto plano en formato Markdown (o Textile) y plantillas Liquid.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
