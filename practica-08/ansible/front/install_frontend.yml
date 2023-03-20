@@ -1,0 +1,39 @@
+---
+- name: Playbook instalar Apache y PHPMyAdmin en la instancia Frontend
+  hosts: frontend
+  become: yes
+
+  vars:
+    - PHPMYADMIN_ADD_PASSWORD: password
+    - STATS_USER: usuario
+    - STATS_PASSWORD: usuario
+
+  tasks:
+    - name: Actualizar los paquetes
+      apt:
+        update_cache: yes
+
+    - name: Instalar servidor web Apache
+      apt: 
+        name: apache2
+        state: present
+    
+    - name: Instalar PHP y sus librerias
+      apt: 
+        name: 
+          - php 
+          - php-mysql
+          - libapache2-mod-php
+          - python3-pip
+          - phpmyadmin
+          - php-mbstring
+          - php-zip 
+          - php-gd
+          - php-json
+          - php-curl
+        state: present
+
+    - name: Reiniciar Apache
+      service:
+        name: apache2
+        state: restarted

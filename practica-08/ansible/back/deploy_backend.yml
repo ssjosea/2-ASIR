@@ -1,0 +1,55 @@
+---
+- name: Playbook instalar las herramientas para el deploy del Backend
+  hosts: backend
+  become: yes
+
+  vars:
+    - DB_NAME: db_name
+    - DB_USER: db_user
+    - DB_PASS: db_pass
+  
+  tasks:
+
+    - name: Instalar modulo Python3-pip
+      apt:
+        name: python3-pip
+        state: present
+    
+    - name: Instalar modulo PyMySQL
+      pip:
+        name: pymysql
+        state: present
+
+    - name: Creamos base de datos en MySQL 
+      mysql_db:
+        name: "{{ DB_NAME }}"
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Creamos usuario para la base de datos en MySQL 
+      mysql_user:
+        name: "{{ DB_USER }}"
+        password: "{{ DB_PASS }}"
+        host: "%"
+        priv: "{{ DB_NAME }}.*:ALL"
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock 
+
+    - name: Clonar repositorio con la pila LAMP
+      git:
+        repo: "https://github.com/josejuansanchez/iaw-practica-lamp.git"
+        dest: /tmp/github/
+        clone: yes
+        update: yes
+        force: yes
+    
+    - name: Modificacion del nombre de la base de datos
+      shell: sed -i "s/lamp_db/{{ DB_NAME }}/"  /tmp/github/db/database.sql
+
+    - name: Importar la base de datos
+      shell: mysql -u root -c < /tmp/github/db/database.sql
+    
+    - name: Reiniciar MySQL
+      service:
+        name: mysql
+        state: restarted

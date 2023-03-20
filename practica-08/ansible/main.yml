@@ -1,0 +1,15 @@
+---
+- name: Instalacion herramientas backend
+  import_playbook: back/install_backend.yml
+
+- name: Instalacion herramientas frontend
+  import_playbook: front/install_frontend.yml
+
+- name: Instalacion deploy frontend
+  import_playbook: front/deploy_frontend.yml
+
+- name: Instalacion deploy backend
+  import_playbook: back/deploy_backend.yml
+
+- name: Instalacion balanceador de carga
+  import_playbook: load_balancer.yml

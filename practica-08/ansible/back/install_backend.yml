@@ -1,0 +1,26 @@
+---
+- name: Playbook para instalar MySQL en la instancia Backend
+  hosts: backend
+  become: yes
+
+
+  tasks:
+    - name: Actualizar los paquetes
+      apt:
+        update_cache: yes
+
+    - name: Instalar servidor web Apache
+      apt: 
+        name: mysql-server
+        state: present
+    
+    - name: Configuración de MySQL Server para aceptar conexiones desde todas la interfaces de red
+      ansible.builtin.replace:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: 127.0.0.1
+        replace: 0.0.0.0
+
+    - name: Reiniciar MySQL
+      service:
+        name: mysql
+        state: restarted

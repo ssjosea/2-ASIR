@@ -1,0 +1,78 @@
+- name: Playbook para implementar el balanceador de carga 
+  hosts: balanceador
+  become: yes
+
+  vars:
+    - IP_HTTP_SERVER_1: 172.31.63.66
+    - IP_HTTP_SERVER_2: 172.31.62.192
+    
+
+  tasks:
+    - name: Actualizar repositorios
+      apt:
+        update_cache: yes
+
+    - name: Instalar el servidor web Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+        name: proxy
+        state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: proxy_http
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: proxy_ajp
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: rewrite
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: deflate
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: headers
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: proxy_balancer
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: proxy_connect
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: proxy_html
+          state: present
+
+    - name: Habilitamos los modulos necesarrios 
+      apache2_module:
+          name: lbmethod_byrequests
+          state: present
+
+    - name: Crea el contenido de 000-conf-default.conf
+      template:
+        src: ../conf/000-default.conf.j2
+        dest: /etc/apache2/sites-available/
+        
+    - name: Reinicamos apache2
+      service: 
+        name: apache2
+        state: restarted
