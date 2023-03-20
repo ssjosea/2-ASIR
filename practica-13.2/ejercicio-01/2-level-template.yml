@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: |
+  Esta plantilla crea un grupo de seguridad con los puertos 22, 80, 443 y 3306 (MySQL) abiertos para el BackEnd y los puertos 22,80 y 443 para FrontEnd,
+  crea una instancia EC2 con la AMI de Ubuntu Server 22.04 y le asocia el grupo de seguridad.
+Resources:
+  # Creación de la instancia BackEnd
+  SgBackend:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Grupo de seguridad de la instancia Backend
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+  EC2Backend:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-06878d265978313ca
+      InstanceType: t2.medium
+      SecurityGroups:
+        - !Ref SgBackend
+      KeyName: vockey
+      Tags:
+        - Key: Name
+          Value: backend-sg
+    
+  # Creacion de la instancia FrontEnd
+  SgFrontend:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Grupo de seguridad de la instancia Frontend-01
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  ec2frontend01:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-06878d265978313ca
+      InstanceType: t2.medium
+      SecurityGroups:
+        - !Ref SgFrontend
+      KeyName: vockey
+      Tags:
+        - Key: Name
+          Value: frontend-sg
